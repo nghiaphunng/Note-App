@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Đăng ký</title>
+
+	<!-- file css -->
+	<link rel="stylesheet" href="/css/login/login_style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="title">Đăng ký</div>
+		<form th:action="@{/register}" th:object="${user}" method="POST" name="formSignup" onsubmit="return validateSignUp()">
+			<div class="field">
+				<input type="text" th:field="*{userName}" required id="userName">
+				<label>Tên đăng nhập</label>
+			</div>
+			
+			<div class="field">
+				<input type="text" th:field="*{userEmail}" required>
+				<label>Địa chỉ email</label>
+			</div>
+			
+			<div class="field">
+				<input type="password" th:field="*{userPassword}" required id="userPassWord">
+				<label>Mật khẩu</label>
+			</div>
+			
+			<div class="field">
+				<input type="submit" value="Đăng ký">
+			</div>
+		</form>
+	</div>
+	
+	<!-- thông báo -->
+	<div id="msgRegister" th:text="${msgRegister}" style="display:none;"></div>
+	
+	<script type="text/javascript">
+		var msgRegister = document.getElementById("msgRegister");
+		var msg = msgRegister.textContent || msgRegister.innerText;
+		if(msg) {
+			alert(msg);
+			window.location.href = "/login";
+		}
+	</script>
+	
+	<!-- file js -->
+	<script type="text/javascript" src="/js/ValidateSignup.js"></script>
+</body>
+</html>

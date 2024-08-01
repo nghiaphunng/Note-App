@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Trang chủ</title>
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!--icon trash, edit-->
+	
+	<!-- file css -->
+	<link rel="stylesheet" href="/css/default/default.css">
+	<link rel="stylesheet" href="/css/home/home_style.css">
+	<link rel="stylesheet" href="/css/home/pop_up.css">
+	<link rel="stylesheet" href="/css/home/note_item.css">
+	
+	<style type="text/css">
+		.active, .btn-mode:hover {
+			background-color: darkseagreen;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+    <div class="main">
+        <div class="content-left" style="background-color:#aaa;" id="mode-app">
+            <a th:href="@{/home}" class="btn-mode active">Ghi chú</a>
+            <a href="javascript:void(0);" class="btn-mode" onclick="openForm()">Thêm ghi chú</a>              
+            <a th:href="@{/home(starred=true)}" class="btn-mode">Gắn dấu sao</a>  
+            <a href="/logout" class="btn-mode">Đăng xuất</a>      
+        </div>
+        
+        <div th:if="${notesDefault}" class="content-right" style="background-color:#bbb; padding: 0 10px;" id="show-note">
+        	<div th:each="entry : ${notesDefault}" >
+	        	<h2 style="margin-bottom: 5px; color: cyan;" th:text="${entry.key}"></h2>
+	            <div class="note-group">
+	                <div class="note-item" th:each="note : ${entry.value}">
+	                    <div class="note-item-main">
+	                        <div class="note-title" th:text="${note.noteTitle}"></div>
+	                        <div class="note-content" th:text="${note.noteContent}"></div>
+	                        <div class="btn-note-item-mode">
+	                            <button th:attr="onclick='openFormEditNote(' + ${note.noteId} + ')'"><i style="font-size: 24px; color:red;" class="fa">&#xf044;</i></button>
+	                            <form th:action="@{/home/delete-note/{id}(id=${note.noteId})}" method="POST">
+	                            	<button><i style="font-size: 24px; color:red" class="fa">&#xf014;</i></button>
+	                            </form>
+	                            <form th:action="@{/home/marked-note/{id}(id=${note.noteId})}" method="GET">
+	                            	<button><i class="fa fa-star" th:style="'color:' + (${note.isMarked == 1} ? 'yellow;' : 'red;') + 'font-size: 24px;'"></i></button>
+	                            </form>	                            
+	                        </div>
+	                    </div>
+	                    
+	                    <!-- pop-up edit note-->
+					    <div class="form-popup" th:attr="id='form-edit-note-' + ${note.noteId}">
+					        <form class="form-container" th:action="@{/home/edit-note}" method="POST">
+					            <h2 style="text-align: center;">Sửa bản ghi chú</h2>
+					            <label for="email"><b>Chủ đề</b></label>
+					            <input type="hidden" id="title-new-note" name="noteId" th:value="${note.noteId}">
+					            <input type="text" id="title-new-note" name="noteTitle" th:value="${note.noteTitle}">
+					
+					            <label for="psw"><b>Nội dung</b></label>
+					            <br>
+					            <textarea id="content-new-note" name="noteContent" th:text="${note.noteContent}"></textarea>
+					
+					            <div class="btn-form-add-note">
+					                <button type="submit" class="btn-form-add">Lưu thay đổi</button>
+					                <button type="button" class="btn-form-cancel" th:attr="onclick='closeFormEditNote(' + ${note.noteId} + ')'">Hủy</button>
+					            </div>
+					        </form>
+					    </div>
+					    
+	                </div>
+	            </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- pop-up add new note-->
+    <div class="form-popup" id="form-add-note">
+        <form class="form-container" th:action="@{/home/new-note}" method="POST">
+            <h2 style="text-align: center;">Ghi chú mới</h2>
+            <label for="email"><b>Chủ đề</b></label>
+            <input type="text" placeholder="Ghi thêm chủ đề" id="title-new-note" name="noteTitle" required>
+
+            <label for="psw"><b>Nội dung</b></label>
+            <br>
+            <textarea id="content-new-note" name="noteContent"></textarea>
+
+            <div class="btn-form-add-note">
+                <button type="submit" class="btn-form-add">Thêm</button>
+                <button type="button" class="btn-form-cancel" onclick="closeForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- file js -->
+	<script type="text/javascript" src="/js/PopupForm.js"></script>
+	<script type="text/javascript" src="/js/ProcessTextInput.js"></script>
+	<script type="text/javascript" src="/js/ModeNote.js"></script>
+    
+    <!-- thông báo -->
+	<div id="msgEditNote" th:text="${msgEditNote}" style="display:none;"></div>
+	<div id="msgDeleteNote" th:text="${msgDeleteNote}" style="display:none;"></div>
+	
+	<script type="text/javascript">
+		var msgEditNote = document.getElementById("msgEditNote");
+		var msg1 = msgEditNote.textContent || msgEditNote.innerText;
+		if(msg1) {
+			alert(msg1);
+		}
+		
+		var msgDeleteNote = document.getElementById("msgDeleteNote");
+		var msg2 = msgDeleteNote.textContent || msgDeleteNote.innerText;
+		if(msg2) {
+			alert(msg2);
+		}
+	</script>
+	
+    <script>
+	     var header = document.getElementById("mode-app");
+	     var btns = header.getElementsByClassName("btn-mode");
+	     for (var i = 0; i < btns.length; i++) {
+	       btns[i].addEventListener("click", function() {
+	       var current = document.getElementsByClassName("active");
+	       if (current.length > 0) { 
+	         current[0].className = current[0].className.replace(" active", "");
+	       }
+	       this.className += " active";
+	       });
+	     }
+	     
+	     function openFormEditInfoUser() {
+	    		document.getElementById("form-edit-info-user").style.display = "block";
+	    	}
+	    	 
+	    	function closeFormEditInfoUser() {
+	    		document.getElementById("form-edit-info-user").style.display = "none";
+	    	}
+	    	
+     </script> 
+     
+</body>
+</html>

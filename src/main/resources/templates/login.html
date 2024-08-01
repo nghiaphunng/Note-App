@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Đăng nhập</title>
+
+	<!-- file css -->
+	<link rel="stylesheet" href="/css/login/login_style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="title">Đăng nhập</div>
+		<form th:action="@{/login}" th:object="${user}" method="POST">
+			<div class="field">
+			   <input type="text" th:field="*{userName}" required>
+			   <label>Tên đăng nhập</label>
+			</div>			
+			<div class="field">
+			   <input type="password" th:field="*{userPassword}" required>
+			   <label>Mật khẩu</label>
+			</div>			
+			<div class="field">
+			   <input type="submit" value="Đăng nhập">
+			</div>
+			<div class="signup-link">Nếu bạn chưa có tài khoản?<br>
+				<a href="/register">Đăng ký</a>
+			</div>
+		</form>
+	</div>
+	
+	<!-- thông báo -->
+	<div id="msgLogin" th:text="${msgLogin}" style="display:none;"></div>
+	
+	<script type="text/javascript">
+		var msgRegister = document.getElementById("msgLogin");
+		var msg = msgRegister.textContent || msgRegister.innerText;
+		if(msg) {
+			alert(msg);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+function deleteNode(){
+	
+}
+
+function markedNode(){
+	
+}

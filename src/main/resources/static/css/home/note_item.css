@@ -1,0 +1,48 @@
+.note-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+.note-item{
+    flex: 1 16.66%;
+    max-width: 16.66%;
+    box-sizing: border-box;
+    padding: 5px;    
+}
+.note-item-main {
+    padding: 5px;
+    background-color: bisque;
+    border: solid;
+    border-radius: 10px;
+}
+.note-title{
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.note-title:hover {
+    overflow: auto;
+    text-overflow: clip;
+}
+
+.note-content{
+    font-size: 20px;
+    font-weight: bold;
+    min-height: 150px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+.btn-note-item-mode {
+    display: flex;
+    justify-content: space-evenly;
+}
+.btn-note-item-mode button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
