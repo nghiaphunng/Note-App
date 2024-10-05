@@ -1,5 +1,6 @@
 # Note-App : Ứng dụng ghi chú
 ## Chức năng
+<img src="assets/sc.png">
 - Đăng ký/Đăng nhập
 - Tạo các ghi chú mới
 - Chỉnh sửa các ghi chú
